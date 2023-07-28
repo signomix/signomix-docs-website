@@ -40,12 +40,13 @@ You can preview the production build with `npm run preview`.
 
 Building Docker Image
 ```bash
-docker build --rm -f "Dockerfile" -t mywebsite:latest "."
+docker build --rm -f "Dockerfile" -t gskorupa/signomix-docs-website:latest "."
+docker push gskorupa/signomix-docs-website:latest "."
+```
 ```
 
 Running Docker Image
 ```bash
-docker run --rm -d -p 5000:5000/tcp mywebsite:latest
 docker run -p 8080:3000 mywebsite:latest
 
 ```

@@ -1,14 +1,20 @@
 export const hcms = {
-    getDocuments: async function (devMode, serviceUrl, path) {
-        console.log("hcms.getDocuments: devMode=" + devMode + " serviceUrl=" + serviceUrl + " path=" + path.params.file)
+    getDocuments: async function (devMode, serviceUrl, path, indexFileName) {
+        console.log("hcms.getDocuments: devMode=" + devMode)
         let docs = [
-            { id: 1, name: "doc1", path: "/doc1" },
+            { content:"<b>test</b> doc", path: "/doc1" },
         ]
         if (devMode) {
             return { paths: this.getPaths(path.params.file), documents: docs }
         }
         let method = 'GET'
-        let url = serviceUrl + "/" + path.params.file
+        let url = serviceUrl + "?path="
+        if(path.params.file.length==0 && indexFileName!=undefined){
+            url=url+indexFileName
+        }else{
+            url=url+path.params.file
+        }
+        console.log("hcms.getDocuments: url=" + url)
         const headers = new Headers()
         headers.set('Accept', 'application/json');
         const response = await fetch(url, { method: method, mode: 'cors', headers: headers })
@@ -26,17 +32,21 @@ export const hcms = {
                 console.error('There was an error!', error)
                 return {}
             })
-
+        return response
     },
     getPaths: function (docpath) {
         let paths = docpath.split("/")
+        console.log("hcms.getPaths: paths=" + paths)
         paths.splice(0, 0, "")
         let result = []
         result.push({
-            name: "Home",
+            name: "", //home folder on index 0
             path: "/"
         })
         for (let i = 1; i < paths.length; i++) {
+            if(paths[i].length==0){
+                continue
+            }
             if (paths[i].indexOf(".") > 0) {
                 result.push({
                     name: paths[i],
@@ -45,7 +55,7 @@ export const hcms = {
             } else {
                 result.push({
                     name: paths[i],
-                    path: result[i - 1].path + paths[i] + "/"
+                    path: result[i - 1].path + paths[i] // + "/"
                 })
             }
 

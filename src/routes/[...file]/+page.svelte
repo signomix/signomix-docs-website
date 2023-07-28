@@ -1,29 +1,42 @@
 <div class="row container-fluid">
-    <div class="col">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb p-0 bg-body-tertiary rounded-3">
+    <div class="col mb-2">
+        {#await data}
+        ...
+        {:then data}
+        {#if data.paths!=undefined && data.paths!=null && data.paths.length>0}
+        {#each data.paths as pathelem, index}
+        <a href={pathelem.path}>{pathelem.name==''?'home':pathelem.name}</a> {data.paths.length-1>index?' / ':''}
+        {/each}
+        {/if}
+        {/await}
+        <!--
+        <nav aria-label="breadcrumb" class="d-fluid">
+            <ol class="breadcrumb d-fluid">
                 {#await data}
                 ...
-                {:then result}
-                {#if result!=null && result!=undefined && result.paths!=null}
-                {#each result.paths as pathelem, index}
-                <li class="breadcrumb-item"><a href={pathelem.path}>{pathelem.name}</a></li>
+                {:then data}
+                {#if data.paths!=undefined && data.paths!=null && data.paths.length>0}
+                {#each data.paths as pathelem, index}
+                <li class="breadcrumb-item"><a href={pathelem.path}>{pathelem.name==''?'home':pathelem.name}</a></li>
                 {/each}
                 {/if}
                 {/await}
             </ol>
         </nav>
+    -->
     </div>
 </div>
+
 <div class="row container-fluid">
     <div class="col">
         <div class="row w-100">
-            <div class="col-10">
+            <div class="col">
                 {#await data}
                 ...
                 {:then result}
-                {#if result!=undefined && result!=null && result.documents!=null && result.documents!=undefined && result.documents.length>0}
-                {result.documents[0].id }
+                {#if result!=undefined && result!=null && result.documents!=null && result.documents!=undefined &&
+                result.documents.length>0}
+                {@html result.documents[0].content}
                 {:else}
                 <h1>Welcome to Cricket website example</h1>
                 <p>If you see this page, Cricket HCMS is probably unavailable at the configured address.</p>
@@ -34,6 +47,7 @@
                 {error.message}
                 {/await}
             </div>
+            <!--
             <div class="col-2 border-start border-end">
                 Tags:<br>
                 {#await data}
@@ -48,6 +62,7 @@
                 {error.message}
                 {/await}
             </div>
+        -->
         </div>
     </div>
 </div>
