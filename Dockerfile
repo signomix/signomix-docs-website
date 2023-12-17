@@ -1,5 +1,5 @@
 # Build the first stage with alpine node image and name as build
-FROM node:18-alpine3.17 as build
+FROM node:20.9.0-alpine3.18 as build
 
 # update and install the latest dependencies on docker base image
 # Add non root user to the docker image and set the user
