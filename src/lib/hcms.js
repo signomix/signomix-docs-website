@@ -37,29 +37,25 @@ export const hcms = {
     getPaths: function (docpath) {
         let paths = docpath.split("/")
         console.log("hcms.getPaths: paths=" + paths)
-        paths.splice(0, 0, "")
-        let result = []
-        result.push({
-            name: "", //home folder on index 0
-            path: "/"
-        })
-        for (let i = 1; i < paths.length; i++) {
-            if(paths[i].length==0){
-                continue
-            }
-            if (paths[i].indexOf(".") > 0) {
-                result.push({
-                    name: paths[i],
-                    path: result[i - 1].path + paths[i]
-                })
-            } else {
-                result.push({
-                    name: paths[i],
-                    path: result[i - 1].path + paths[i] // + "/"
-                })
-            }
-
+        // insert "home" path if not present
+        if(paths.length>0 && paths[0].length>0){
+            paths.splice(0, 0, "")
         }
+        let result = []
+        for (let i = 0; i < paths.length; i++) {
+            result.push({
+                name: paths[i],
+                path: "/"
+            })
+        }
+        for (let i = 1; i < paths.length; i++) {
+            let tmp=result[i - 1].path + '/'+paths[i]
+            if(tmp.startsWith("//")){
+                tmp=tmp.substring(1)
+            }
+            result[i].path = tmp
+        }
+        console.log(result)
         return result
     },
     getElementPath: function (index, paths) {

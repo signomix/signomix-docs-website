@@ -2,7 +2,7 @@
     <nav class="navbar h2" style="background-color: #1849cf;">
         <a class="navbar-brand ms-2" href="#">
             <img src="/logo-light.svg" alt="Logo" height="36" class="d-inline-block my-auto me-2">
-            <span class="h3 my-auto" style="color: rgb(223, 223, 223);">Signomix documentation</span>
+            <span class="h3 my-auto" style="color: rgb(247, 247, 247);">Signomix documentation</span>
         </a>
     </nav>
 </div>
