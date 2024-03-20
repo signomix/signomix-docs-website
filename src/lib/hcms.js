@@ -1,18 +1,18 @@
 export const hcms = {
-    getDocuments: async function (devMode, serviceUrl, path, indexFileName) {
+    getDocuments: async function (devMode, serviceUrl, path, rootFolder, indexFileName) {
         console.log("hcms.getDocuments: devMode=" + devMode)
-        let docs = [
-            { content:"<b>test</b> doc", path: "/doc1" },
-        ]
         if (devMode) {
+            let docs = [
+                { content:"<b>test</b> doc", path: "/doc1" },
+            ]
             return { paths: this.getPaths(path.params.file), documents: docs }
         }
         let method = 'GET'
         let url = serviceUrl + "?path="
         if(path.params.file.length==0 && indexFileName!=undefined){
-            url=url+indexFileName
+            url=url+rootFolder+'/'+indexFileName
         }else{
-            url=url+path.params.file
+            url=url+rootFolder+'/'+path.params.file
         }
         console.log("hcms.getDocuments: url=" + url)
         const headers = new Headers()
