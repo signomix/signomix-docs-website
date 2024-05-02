@@ -1,3 +1,5 @@
+import { error } from '@sveltejs/kit';
+
 export const hcms = {
     getDocuments: async function (devMode, serviceUrl, path, rootFolder, indexFileName) {
         console.log("hcms.getDocuments: devMode=" + devMode)
@@ -20,7 +22,10 @@ export const hcms = {
         const response = await fetch(url, { method: method, mode: 'cors', headers: headers })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(response.statusText)
+                    throw new Error(response.statusText+" "+response.status)
+                    /* error(400, {
+                        message: 'Not found or not handled file type'
+                    }); */
                 }
                 let documents = response.json()
                 return {
@@ -30,7 +35,10 @@ export const hcms = {
             })
             .catch(error => {
                 console.error('There was an error!', error)
-                return {}
+                return {
+                    paths: this.getPaths(path.params.file),
+                    documents: []
+                }
             })
         return response
     },
