@@ -42,8 +42,8 @@
         }else if(!(path.endsWith('.md') || path.endsWith('.html'))){
             result = path+'/'+PUBLIC_HCMS_INDEX
         }
-        console.log('index file',PUBLIC_HCMS_INDEX)
-        console.log('getTargetPath',result)
+        //console.log('index file',PUBLIC_HCMS_INDEX)
+        //console.log('getTargetPath',result)
         return result;
     }
 </script>
