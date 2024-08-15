@@ -37,13 +37,11 @@
     export let data
     function getTargetPath(path){
         let result = path
-        if(path==null || path==undefined || path=='' || path=='/'){
-            result = '/'+PUBLIC_HCMS_INDEX;
-        }else if(!(path.endsWith('.md') || path.endsWith('.html'))){
-            result = path+'/'+PUBLIC_HCMS_INDEX
+        if (path == null || path == undefined || path == '' || path == '/') {
+            result = '/' + indexFile;
+        } else if (!(path.endsWith('.md') || path.endsWith('.html'))) {
+            result = path + '/' + indexFile
         }
-        //console.log('index file',PUBLIC_HCMS_INDEX)
-        //console.log('getTargetPath',result)
         return result;
     }
 </script>
