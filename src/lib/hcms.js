@@ -53,7 +53,7 @@ export const hcms = {
             })
         return response
     },
-    findDocuments: async function (devMode, serviceUrl, pathObject, rootFolder, tagName, tagValue, sortBy, sortOrder,content) {
+    findDocuments: async function (devMode, serviceUrl, pathObject, rootFolder, tagName, tagValue, sortBy, sortOrder, content) {
         //console.log("hcms.getDocuments: devMode=" + devMode +" serviceUrl=" + serviceUrl)
         if (devMode) {
             let docs = [
@@ -62,7 +62,7 @@ export const hcms = {
             return { paths: this.getPaths(pathObject.params.file), documents: docs }
         }
         let method = 'GET'
-        let url = serviceUrl + "/api/find?tag=" + tagName + ":" + tagValue + "&sort="+sortBy+"&direction="+sortOrder+"&content="+content + "&path="
+        let url = serviceUrl + "/api/find?tag=" + tagName + ":" + tagValue + "&sort=" + sortBy + "&direction=" + sortOrder + "&content=" + content + "&path="
         let pathFolder = ""
         if (typeof pathObject === 'string' || pathObject instanceof String) {
             pathFolder = pathObject
@@ -152,9 +152,9 @@ export const hcms = {
      * @returns {object} - document
      * @throws {Error} - error
      * */
-    getDocument: function (devMode, serviceUrl, path, indexFile, rootFolder, token, type) {
+    getDocument: function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages) {
         try {
-            return Promise.resolve(getHcmsDocument(devMode, serviceUrl, path, indexFile, rootFolder, token, type)).then((result) => result);
+            return Promise.resolve(getHcmsDocument(devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages)).then((result) => result);
         } catch (e) {
             throw new Error(e);
         }
@@ -183,7 +183,7 @@ export const hcms = {
 
 }
 
-const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, rootFolder, token, type) {
+const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages) {
     //console.log("hcms.getDocument: devMode=" + devMode +" serviceUrl=" + serviceUrl)
     if (devMode) {
         if (type != undefined && type == "navigation") {
@@ -211,13 +211,31 @@ const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, ro
         }
         let siteRoot = rootFolder == undefined ? "" : rootFolder
         let endpoint;
+        let docPath
         if (typeof path === 'string' || path instanceof String) {
-            //console.log("path is a string")
-            endpoint = serviceUrl + "/api/document?name=" + siteRoot + path
+            docPath = path
         } else {
-            //console.log("path is an object")
-            endpoint = serviceUrl + "/api/document?name=/" + siteRoot + path.url.pathname //+ "/"+path.params.file
+            docPath = path.url.pathname
         }
+        if (language != undefined && language != null && languages != undefined && languages != null) {
+            let langArr = languages.split(",")
+            let langIsOK = false
+            // if path starts with one of the languages it's OK
+            for (let i = 0; i < langArr.length; i++) {
+                if (docPath.startsWith("/" + langArr[i] + "/")) {
+                    langIsOK = true
+                    break
+                }
+            }
+            // otherwise add language to the path
+            if (!langIsOK) {
+                docPath = "/" + language + docPath
+            }
+
+        }else{
+            console.log("language or languages not defined")
+        }
+        endpoint = serviceUrl + "/api/document?name=/" + siteRoot + docPath
         if (!(endpoint.endsWith(".md") || endpoint.endsWith(".html") || endpoint.endsWith(".json"))) {
             endpoint = endpoint + indexFile
         }
@@ -265,17 +283,17 @@ const findHcmsDocument = async function (devMode, serviceUrl, path, indexFile, r
         if (typeof path === 'string' || path instanceof String) {
             //console.log("path is a string")
             let path2 = path
-            if(path.endsWith('index.md' || path.endsWith('index.html'))){
-                path2 = path.substring(0, path.lastIndexOf('/')+1)
+            if (path.endsWith('index.md' || path.endsWith('index.html'))) {
+                path2 = path.substring(0, path.lastIndexOf('/') + 1)
             }
-            endpoint = serviceUrl + "/api/findfirst?content=true&sort="+sortBy+"&direction="+sortOrder+"&tag=" + tagName + ":" + tagValue + "&path=/" + siteRoot + path2
+            endpoint = serviceUrl + "/api/findfirst?content=true&sort=" + sortBy + "&direction=" + sortOrder + "&tag=" + tagName + ":" + tagValue + "&path=/" + siteRoot + path2
         } else {
             //console.log("path is an object")
             let path2 = path.url.pathname
-            if(path2.endsWith('index.md' || path2.endsWith('index.html'))){
-                path2 = path2.substring(0, path2.lastIndexOf('/')+1)
+            if (path2.endsWith('index.md' || path2.endsWith('index.html'))) {
+                path2 = path2.substring(0, path2.lastIndexOf('/') + 1)
             }
-            endpoint = serviceUrl + "/api/findfirst?content=true&sort="+sortBy+"&direction="+sortOrder+"&tag=" + tagName + ":" + tagValue + "&path=/" + siteRoot + path2 //+ "/"+path.params.file
+            endpoint = serviceUrl + "/api/findfirst?content=true&sort=" + sortBy + "&direction=" + sortOrder + "&tag=" + tagName + ":" + tagValue + "&path=/" + siteRoot + path2 //+ "/"+path.params.file
         }
         /* if (!(endpoint.endsWith(".md") || endpoint.endsWith(".html") || endpoint.endsWith(".json"))) {
             endpoint = endpoint + "/" + indexFile
