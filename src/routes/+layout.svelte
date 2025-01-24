@@ -5,12 +5,15 @@
             <span class="h3 my-auto" style="color: rgb(247, 247, 247);">Signomix documentation</span>
         </a>
         <span class="text-end text-white h5 me-2" style="background-color: #1849cf;">
+            <!-- <span on:click={showDialog}>Chat</span> -->
+            <span on:click={() => modal.show()}><i class="bi bi-robot me-4 h2"></i></span>
             <a href="/pl/index.md" class="me-2">pl</a>
             <a href="/en/index.md" class="me-2">en</a>
         </span>
     </nav>
-    
+
 </div>
+<ChatBotWindow bind:b5modal={modal}/>
 <slot></slot>
 <div class="container-fluid">
     <footer class="py-2 my-3 border-top">
@@ -19,29 +22,25 @@
                 <span class="text-body-secondary">&copy; 2023-2004 Grzegorz Skorupa</span>
             </div>
             <div class="col-9 text-end">
-                <a class="text-body-secondary" href="https://github.com/gskorupa/cricket-website-template" target="_blank"><i class="bi bi-github h4 text-black-50"></i></a>
+                <a class="text-body-secondary" href="https://github.com/gskorupa/cricket-website-template"
+                    target="_blank"><i class="bi bi-github h4 text-black-50"></i></a>
             </div>
         </div>
     </footer>
 </div>
-<!-- <script>
-    import { goto } from '$app/navigation';
-    //function chackUrl(path) {
-    let url
-    // if (typeof path === 'string' || path instanceof String) {
-    //     url = path
-    // } else {
-    //     url = path.url.pathname
-    // }
-    let urlOk = false
-    let langArray = process.env.PUBLIC_HCMS_LANGUAGES.split(',')
-    langArray.forEach(element => {
-        if (location.startsWith('/' + element)) {
-            urlOk = true
-        }
-    });
-    if(!urlOk) {
-        goto('/' + process.env.PUBLIC_HCMS_LANGUAGE + url)
+<script>
+    import { browser } from '$app/environment';
+    import { onMount } from 'svelte';
+    import ChatBotWindow from '$lib/ChatBotWindow.svelte';
+
+    let modal
+</script>
+<style>
+    dialog {
+        position: absolute;
+        top: 90%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
     }
-//}
-</script> -->
+</style>
