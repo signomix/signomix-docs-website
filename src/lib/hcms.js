@@ -147,14 +147,18 @@ export const hcms = {
      * @param {string} serviceUrl - HCMS service URL
      * @param {string} path - document path
      * @param {string} indexFile - index file name
+     * @param {string} rootFolder - root folder 
      * @param {string} token - optional authentication token (for future use)
      * @param {string} type - document type (use "navigation" to get example navigation.json in development mode
+     * @param {string} language - language
+     * @param {string} languages - available languages
+     * @param {string} organizationCode - organization code
      * @returns {object} - document
      * @throws {Error} - error
      * */
-    getDocument: function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages) {
+    getDocument: function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages, organizationCode) {
         try {
-            return Promise.resolve(getHcmsDocument(devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages)).then((result) => result);
+            return Promise.resolve(getHcmsDocument(devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages, organizationCode)).then((result) => result);
         } catch (e) {
             throw new Error(e);
         }
@@ -183,7 +187,7 @@ export const hcms = {
 
 }
 
-const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages) {
+const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages, organizationCode) {
     //console.log("hcms.getDocument: devMode=" + devMode +" serviceUrl=" + serviceUrl)
     if (devMode) {
         if (type != undefined && type == "navigation") {
@@ -235,7 +239,13 @@ const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, ro
         }else{
             console.log("language or languages not defined")
         }
-        endpoint = serviceUrl + "/api/document?name=/" + siteRoot + docPath
+        console.log("organizationCode[1]", organizationCode)
+        if(organizationCode != undefined && organizationCode != null){
+            endpoint = serviceUrl + "/api/document?name=/" + siteRoot + "/" + organizationCode + docPath
+        }else{
+            endpoint = serviceUrl + "/api/document?name=/" + siteRoot + docPath
+        }
+        console.log("endpoint", endpoint)
         if (!(endpoint.endsWith(".md") || endpoint.endsWith(".html") || endpoint.endsWith(".json"))) {
             endpoint = endpoint + indexFile
         }
