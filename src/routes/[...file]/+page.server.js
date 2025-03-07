@@ -25,22 +25,21 @@ export async function load(params) {
         goto('/login')
     }
     try {
-        var organizationCode = null;
+        /* var organizationCode = null;
         if(process.env.PUBLIC_ORGANIZATIONS!=undefined && process.env.PUBLIC_ORGANIZATIONS!=null){ 
             organizationCode = 73
         }
-        console.log('organizationCode', organizationCode)
+        console.log('organizationCode', organizationCode) */
         return await hcms.getDocument(
             dev,
             process.env.PUBLIC_HCMS_URL,
             params,
             process.env.PUBLIC_HCMS_INDEX,
             process.env.PUBLIC_HCMS_ROOT,
-            null,
+            token,
             null,
             process.env.PUBLIC_HCMS_LANGUAGE,
-            process.env.PUBLIC_HCMS_LANGUAGES,
-            organizationCode
+            process.env.PUBLIC_HCMS_LANGUAGES
         )
     } catch (err) {
         console.log(err)

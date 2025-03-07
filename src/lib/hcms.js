@@ -156,9 +156,9 @@ export const hcms = {
      * @returns {object} - document
      * @throws {Error} - error
      * */
-    getDocument: function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages, organizationCode) {
+    getDocument: function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages) {
         try {
-            return Promise.resolve(getHcmsDocument(devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages, organizationCode)).then((result) => result);
+            return Promise.resolve(getHcmsDocument(devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages)).then((result) => result);
         } catch (e) {
             throw new Error(e);
         }
@@ -187,7 +187,7 @@ export const hcms = {
 
 }
 
-const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages, organizationCode) {
+const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, rootFolder, token, type, language, languages) {
     //console.log("hcms.getDocument: devMode=" + devMode +" serviceUrl=" + serviceUrl)
     if (devMode) {
         if (type != undefined && type == "navigation") {
@@ -239,12 +239,12 @@ const getHcmsDocument = async function (devMode, serviceUrl, path, indexFile, ro
         }else{
             console.log("language or languages not defined")
         }
-        console.log("organizationCode[1]", organizationCode)
-        if(organizationCode != undefined && organizationCode != null){
-            endpoint = serviceUrl + "/api/document?name=/" + siteRoot + "/" + organizationCode + docPath
-        }else{
+        //console.log("organizationCode[1]", organizationCode)
+        //if(organizationCode != undefined && organizationCode != null){
+        //    endpoint = serviceUrl + "/api/document?name=/" + siteRoot + "/" + organizationCode + docPath
+        //}else{
             endpoint = serviceUrl + "/api/document?name=/" + siteRoot + docPath
-        }
+        //}
         console.log("endpoint", endpoint)
         if (!(endpoint.endsWith(".md") || endpoint.endsWith(".html") || endpoint.endsWith(".json"))) {
             endpoint = endpoint + indexFile
