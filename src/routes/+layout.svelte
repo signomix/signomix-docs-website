@@ -2,11 +2,13 @@
     <nav class="navbar h2" style="background-color: #1849cf;">
         <a class="navbar-brand ms-2" href="#">
             <img src="/logo-light.svg" alt="Logo" height="36" class="d-inline-block my-auto me-2">
-            <span class="h3 my-auto" style="color: rgb(247, 247, 247);">Signomix documentation</span>
+            <span class="h3 my-auto" style="color: rgb(247, 247, 247);">Documentation viewer</span>
         </a>
         <span class="text-end text-white h5 me-2" style="background-color: #1849cf;">
             <!-- <span on:click={showDialog}>Chat</span> -->
+            {#if isChatbotInUse()}
             <span on:click={() => modal.show()}><i class="bi bi-robot me-4 h2"></i></span>
+            {/if}
             <a href="/pl/index.md" class="me-2">pl</a>
             <a href="/en/index.md" class="me-2">en</a>
         </span>
@@ -19,7 +21,7 @@
     <footer class="py-2 my-3 border-top">
         <div class="row ">
             <div class="col-3">
-                <span class="text-body-secondary">&copy; 2023-2004 Grzegorz Skorupa</span>
+                <span class="text-body-secondary">&copy; 2023-2025 Grzegorz Skorupa</span>
             </div>
             <div class="col-9 text-end">
                 <a class="text-body-secondary" href="https://github.com/gskorupa/cricket-website-template"
@@ -29,11 +31,15 @@
     </footer>
 </div>
 <script>
-    import { browser } from '$app/environment';
-    import { onMount } from 'svelte';
     import ChatBotWindow from '$lib/ChatBotWindow.svelte';
+    import { env } from '$env/dynamic/public';
 
     let modal
+
+    let chatbotWsUrl = env.PUBLIC_WS_URL
+    function isChatbotInUse() {
+        return chatbotWsUrl!=undefined && chatbotWsUrl!=null
+    }
 </script>
 <style>
     dialog {

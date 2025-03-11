@@ -43,21 +43,16 @@
         let defaultLanguage = env.PUBLIC_HCMS_LANGUAGE;
 
         onMount(async () => {
-            chackUrl()
+            checkUrl()
         });
 
 
-        function chackUrl() {
+        function checkUrl() {
             let url = window.location.pathname
             console.log('url', url)
             if(url=='/'){
                 goto('/'+defaultLanguage+'/'+indexFile)
             }
-            /*     if (typeof path === 'string' || path instanceof String) {
-                    url = path
-                } else {
-                    url = path.url.pathname
-                } */
             let urlOk = false
             let langArray = languages.split(',')
             langArray.forEach(element => {
@@ -80,6 +75,19 @@
             try {
                 //console.log('data', data)
                 let steps = data.name.split('/')
+                // remowe first one or two steps elements that are numbers, starting from element 1
+                // this is to remove organization and optionally organization/tenant from the path
+                // start
+                let index = 1
+                while (index < steps.length) {
+                    if (!isNaN(steps[index])) {
+                        steps.splice(index, 1)
+                    } else {
+                        index++
+                    }
+                }
+                // end
+
                 //console.log('steps', steps)
                 let path = ''
                 for (let i = 0; i < steps.length; i++) {
